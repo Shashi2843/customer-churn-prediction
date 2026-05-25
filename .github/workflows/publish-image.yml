@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - chore/add-ci-codeowners
+      - main
 
 jobs:
   build-and-push:
