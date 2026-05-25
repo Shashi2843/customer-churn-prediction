@@ -22,4 +22,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/customer-churn-prediction:latest
+          tags: ${{ toLower(secrets.DOCKERHUB_USERNAME) }}/customer-churn-prediction:latest
