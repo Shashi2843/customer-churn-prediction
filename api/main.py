@@ -38,21 +38,31 @@ def load_artifacts():
     global MODEL, PREPROCESSOR
     
     try:
-        model_path = MODELS_DIR / f"{BEST_MODEL_NAME}.pkl"
         preprocessor_path = MODELS_DIR / "preprocessor.pkl"
-        
-        if not model_path.exists():
-            logger.error(f"Model not found at {model_path}")
-            raise FileNotFoundError(f"Model file not found: {model_path}")
-        
+
+        # Preferred and fallback model paths
+        preferred = MODELS_DIR / f"{BEST_MODEL_NAME}.pkl"
+        fallback = MODELS_DIR / "logistic_regression.pkl"
+
+        if preferred.exists():
+            model_path = preferred
+            loaded_name = BEST_MODEL_NAME
+        elif fallback.exists():
+            model_path = fallback
+            loaded_name = "logistic_regression"
+            logger.warning(f"Preferred model not found; falling back to {model_path}")
+        else:
+            logger.error(f"No model found at {preferred} or {fallback}")
+            raise FileNotFoundError(f"Model file not found: {preferred} or {fallback}")
+
         if not preprocessor_path.exists():
             logger.error(f"Preprocessor not found at {preprocessor_path}")
             raise FileNotFoundError(f"Preprocessor file not found: {preprocessor_path}")
-        
+
         MODEL = joblib.load(str(model_path))
         PREPROCESSOR = joblib.load(str(preprocessor_path))
-        
-        logger.info(f"Model '{BEST_MODEL_NAME}' loaded successfully")
+
+        logger.info(f"Model '{loaded_name}' loaded from {model_path}")
         logger.info("Preprocessor loaded successfully")
     except Exception as e:
         logger.error(f"Error loading artifacts: {e}")
