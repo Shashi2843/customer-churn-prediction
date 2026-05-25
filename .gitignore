@@ -36,6 +36,8 @@ wheels/
 # Project specific
 data/raw/*
 !data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
 logs/*
 !logs/.gitkeep
 models/*.pkl

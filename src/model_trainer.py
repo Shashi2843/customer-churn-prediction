@@ -51,7 +51,21 @@ class ModelTrainer:
             max_iter=1000,
             **kwargs
         )
-        model.fit(X_train, y_train)
+        # If X_train contains non-numeric data (e.g., test fixtures), convert using one-hot encoding
+        if isinstance(X_train, (list, tuple)):
+            X_train = np.array(X_train)
+
+        if isinstance(X_train, np.ndarray) and X_train.dtype == object:
+            X_df = pd.DataFrame(X_train)
+            # Use get_dummies to one-hot encode string/object columns
+            X_df = pd.get_dummies(X_df, dummy_na=False)
+            # remember feature columns for later prediction
+            self._feature_columns = X_df.columns.tolist()
+            X_train_proc = X_df.values
+        else:
+            X_train_proc = X_train
+
+        model.fit(X_train_proc, y_train)
         
         self.models['logistic_regression'] = model
         logger.info("Logistic Regression training completed")
@@ -155,7 +169,18 @@ class ModelTrainer:
         if model_name not in self.models:
             raise ValueError(f"Model '{model_name}' not found. Available: {list(self.models.keys())}")
         
-        return self.models[model_name].predict(X)
+        model = self.models[model_name]
+
+        # If X is object-dtype (e.g., raw sample with categorical strings), encode similarly
+        if isinstance(X, np.ndarray) and X.dtype == object and hasattr(self, '_feature_columns'):
+            X_df = pd.DataFrame(X)
+            X_df = pd.get_dummies(X_df, dummy_na=False)
+            # Reindex to ensure same feature columns as training, fill missing with 0
+            X_df = X_df.reindex(columns=self._feature_columns, fill_value=0)
+            X_proc = X_df.values
+            return model.predict(X_proc)
+
+        return model.predict(X)
     
     def predict_proba(self, model_name: str, X: np.ndarray) -> np.ndarray:
         """
@@ -171,7 +196,16 @@ class ModelTrainer:
         if model_name not in self.models:
             raise ValueError(f"Model '{model_name}' not found")
         
-        return self.models[model_name].predict_proba(X)
+        model = self.models[model_name]
+
+        if isinstance(X, np.ndarray) and X.dtype == object and hasattr(self, '_feature_columns'):
+            X_df = pd.DataFrame(X)
+            X_df = pd.get_dummies(X_df, dummy_na=False)
+            X_df = X_df.reindex(columns=self._feature_columns, fill_value=0)
+            X_proc = X_df.values
+            return model.predict_proba(X_proc)
+
+        return model.predict_proba(X)
     
     def evaluate_model(
         self,
