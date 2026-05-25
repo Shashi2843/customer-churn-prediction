@@ -1,0 +1,4 @@
+# Data directory for storing datasets
+# This directory should contain:
+# - raw/: Original dataset files
+# - processed/: Cleaned and preprocessed data
