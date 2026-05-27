@@ -58,6 +58,16 @@
     </style>
   </head>
   <body>
+    {% macro image_src(value) -%}
+      {%- if value -%}
+        {%- if value.startswith('data:') -%}
+          {{ value }}
+        {%- else -%}
+          data:image/png;base64,{{ value }}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endmacro %}
+
     <header class="hero-luxury">
       <div class="brand">
         <svg width="48" height="48" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="report logo" style="border-radius:8px;object-fit:cover;display:block">
@@ -104,26 +114,26 @@
       <div class="charts">
         <div class="panel chart-lg">
           {% if risk_png %}
-            <img class="report-img glow" src="data:image/png;base64,{{ risk_png }}" alt="Risk distribution" />
+            <img class="report-img glow" src="{{ image_src(risk_png) }}" alt="Risk distribution" />
           {% else %}
             <p style="color:var(--muted)">No risk chart available.</p>
           {% endif %}
           <div style="margin-top:10px;">
             {% if drift_png %}
-              <img class="report-img" src="data:image/png;base64,{{ drift_png }}" alt="Drift trend" />
+              <img class="report-img" src="{{ image_src(drift_png) }}" alt="Drift trend" />
             {% endif %}
           </div>
         </div>
 
         <div class="panel chart-sm">
           {% if importance_png %}
-            <img class="report-img" src="data:image/png;base64,{{ importance_png }}" alt="Feature importance" />
+            <img class="report-img" src="{{ image_src(importance_png) }}" alt="Feature importance" />
           {% else %}
             <p style="color:var(--muted)">No importance chart available.</p>
           {% endif %}
           <div style="margin-top:10px;display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;">
             {% if kpi_png %}
-              <div style="flex:0 0 240px;"><img class="report-img" src="data:image/png;base64,{{ kpi_png }}" alt="KPI sparkline" /></div>
+              <div style="flex:0 0 240px;"><img class="report-img" src="{{ image_src(kpi_png) }}" alt="KPI sparkline" /></div>
             {% endif %}
             <div style="flex:1;min-width:180px">
               {% if metrics %}
