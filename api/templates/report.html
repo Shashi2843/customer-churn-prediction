@@ -14,7 +14,7 @@
         --glass-border: rgba(255,255,255,0.06);
       }
       html,body{height:100%;margin:0;padding:0}
-      body { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color:#dbeafe; background: linear-gradient(180deg,var(--bg), #071029 120%); -webkit-font-smoothing:antialiased; }
+      body { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color:#dbeafe; background: linear-gradient(180deg,var(--bg), #071029 120%); -webkit-font-smoothing:antialiased; }
       header.hero-luxury{display:flex;align-items:center;gap:18px;padding:20px;border-bottom:1px solid rgba(255,255,255,0.03)}
       header .brand{display:flex;gap:14px;align-items:center}
       header h1{margin:0;font-size:20px;font-weight:700;color:#fff;letter-spacing:0.2px}
@@ -60,15 +60,17 @@
   <body>
     <header class="hero-luxury">
       <div class="brand">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect width="24" height="24" rx="4" fill="url(#g)"/>
-          <path d="M5 12l3 3 9-9" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg width="48" height="48" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="report logo" style="border-radius:8px;object-fit:cover;display:block">
           <defs>
-            <linearGradient id="g" x1="0" x2="1">
+            <linearGradient id="logoGradient" x1="0" x2="1">
               <stop offset="0" stop-color="#8b5cf6" />
               <stop offset="1" stop-color="#06b6d4" />
             </linearGradient>
           </defs>
+          <rect width="64" height="64" rx="10" fill="url(#logoGradient)" />
+          <g transform="translate(6,6) scale(0.9)">
+            <path d="M6 30 L18 42 L48 12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
         </svg>
         <div>
           <h1>AI Customer Churn Intelligence</h1>
